@@ -1,0 +1,1 @@
+# fake-lock-screen-pattern
