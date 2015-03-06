@@ -27,3 +27,15 @@
 *.i*86
 *.x86_64
 *.hex
+
+configure
+config
+Makefile
+config.h
+stamp-h1
+autom4te.cache
+*.in
+*.in~
+*.status
+*.log
+
