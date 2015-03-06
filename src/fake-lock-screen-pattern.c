@@ -21,7 +21,11 @@ insert_textview_log(GtkWidget *view, gchar *message)
 static gboolean
 button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-  g_print("%s:%d\n", G_STRFUNC, event->button);
+  gchar *msg;
+
+  msg = g_strdup_printf("%s: button:%d\n", G_STRFUNC, event->button);
+  insert_textview_log(GTK_WIDGET(data), msg);
+  g_free(msg);
 
   return TRUE;
 }
@@ -29,14 +33,24 @@ button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 static gboolean
 configure_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-  g_print("%s:%d\n", G_STRFUNC, event->button);
+  gchar *msg;
+
+  msg = g_strdup_printf("%s:\n", G_STRFUNC);
+  insert_textview_log(GTK_WIDGET(data), msg);
+  g_free(msg);
+
   return FALSE;
 }
 
 static gboolean
 expose_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-  g_print("%s:%d\n", G_STRFUNC, event->button);
+  gchar *msg;
+
+  msg = g_strdup_printf("%s:\n", G_STRFUNC);
+  insert_textview_log(GTK_WIDGET(data), msg);
+  g_free(msg);
+
   return FALSE;
 }
 
@@ -152,11 +166,11 @@ int main(int argc, char *argv[])
   gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
 
   g_signal_connect(drawing, "button-press-event",
-                   G_CALLBACK(button_press_event), NULL);
+                   G_CALLBACK(button_press_event), textview);
   g_signal_connect(drawing, "configure-event",
-                   G_CALLBACK(configure_event), NULL);
+                   G_CALLBACK(configure_event), textview);
   g_signal_connect(drawing, "expose-event",
-                   G_CALLBACK(expose_event), NULL);
+                   G_CALLBACK(expose_event), textview);
   g_signal_connect(drawing, "motion-notify-event",
                    G_CALLBACK(motion_notify_event), textview);
 
