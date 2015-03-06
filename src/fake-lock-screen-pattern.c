@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 {
   GtkWidget *window;
   GtkWidget *drawing;
-  GtkWidget *vbox;
+  GtkWidget *paned;
   GtkWidget *scrolled;
   GtkWidget *textview;
   GError *error = NULL;
@@ -159,11 +159,11 @@ int main(int argc, char *argv[])
 
   textview = gtk_text_view_new();
   gtk_container_add(GTK_CONTAINER(scrolled), textview);
-  gtk_widget_show(textview);
 
-  vbox = gtk_vbox_new(TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), drawing, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
+  paned = gtk_vpaned_new();
+  gtk_paned_pack1(GTK_PANED(paned), drawing, TRUE, FALSE);
+  gtk_paned_pack2(GTK_PANED(paned), scrolled, FALSE, FALSE);
+  gtk_widget_set_size_request(scrolled, -1, 200);
 
   g_signal_connect(drawing, "button-press-event",
                    G_CALLBACK(button_press_event), textview);
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
                         | GDK_POINTER_MOTION_MASK
                         | GDK_POINTER_MOTION_HINT_MASK);
 
-  gtk_container_add(GTK_CONTAINER(window), vbox);
+  gtk_container_add(GTK_CONTAINER(window), paned);
 
   gtk_widget_show_all(window);
 
