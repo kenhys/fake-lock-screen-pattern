@@ -34,6 +34,9 @@ Makefile
 config.h
 stamp-h1
 autom4te.cache
+aclocal.m4
+.deps
+.libs
 *.in
 *.in~
 *.status
