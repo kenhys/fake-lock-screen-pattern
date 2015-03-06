@@ -44,12 +44,18 @@ static gchar *module = NULL;
 static gchar *background = NULL;
 static gchar *foreground = NULL;
 static gchar *mark = NULL;
+static gchar *real = NULL;
+static gchar *dummy = NULL;
 static gboolean verbose = FALSE;
 
 static GOptionEntry option_entries[] = 
 {
   { "pattern-module",   'p', 0, G_OPTION_ARG_STRING, &module,
     "Pattern module",  "MODULE" },
+  { "real-password",    'r', 0, G_OPTION_ARG_STRING, &real,
+    "Real password",   "PASSWORD" },
+  { "dummy-password",   'd', 0, G_OPTION_ARG_STRING, &dummy,
+    "Dummy password",  "PASSWORD" },
   { "background-color", 'b', 0, G_OPTION_ARG_STRING, &background,
     "Background color (Color name or #RRGGBB)", "COLOR" },
   { "foreground-color", 'f', 0, G_OPTION_ARG_STRING, &foreground,
