@@ -2,6 +2,22 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+static void
+insert_textview_log(GtkWidget *view, gchar *message)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+  gtk_text_buffer_get_end_iter(buffer, &iter);
+  gtk_text_buffer_insert(buffer, &iter, message, -1);
+
+  gtk_text_view_scroll_to_iter(GTK_TEXT_VIEW(view),
+                               &iter, 0.0, FALSE, 0, 0);
+}
+
+
+
 static gboolean
 button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
@@ -29,10 +45,15 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 {
   gint x, y;
   GdkModifierType modifier_state;
+  gchar *msg;
 
   gdk_window_get_pointer(event->window, &x, &y, &modifier_state);
 
-  g_print("%s:modifier state: %d x:%d y:%d\n", G_STRFUNC, modifier_state, x, y);
+  msg = g_strdup_printf("%s:modifier state: %d x:%d y:%d\n",
+                        G_STRFUNC, modifier_state, x, y);
+  
+  insert_textview_log(GTK_WIDGET(data), msg);
+  g_free(msg);
 
   if (modifier_state & GDK_BUTTON1_MASK)
     g_print("%s:GDK_BUTTON1_MASK\n", G_STRFUNC);
@@ -137,7 +158,7 @@ int main(int argc, char *argv[])
   g_signal_connect(drawing, "expose-event",
                    G_CALLBACK(expose_event), NULL);
   g_signal_connect(drawing, "motion-notify-event",
-                   G_CALLBACK(motion_notify_event), NULL);
+                   G_CALLBACK(motion_notify_event), textview);
 
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
