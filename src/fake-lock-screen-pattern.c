@@ -67,6 +67,29 @@ static GOptionEntry option_entries[] =
   { NULL }
 };
 
+typedef struct _FakeLockOption {
+  void *module;
+  gchar *real;
+  gchar *dummy;
+} FakeLockOption;
+
+static FakeLockOption option;
+
+void load_config_file(void)
+{
+  GKeyFile *key_file;
+  GKeyFileFlags flags;
+  GError *error;
+
+  key_file = g_key_file_new();
+  path = g_build_filename(g_get_home_dir(),
+                          ".fake-lock-screen-patternrc",
+                          NULL);
+  flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+  g_key_file_load_from_file(key_file, path, flags, &error);
+  g_key_file_free(key_file);
+}
+
 int main(int argc, char *argv[])
 {
   GtkWidget *window;
