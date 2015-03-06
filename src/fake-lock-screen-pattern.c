@@ -80,6 +80,7 @@ void load_config_file(void)
   GKeyFile *key_file;
   GKeyFileFlags flags;
   GError *error;
+  gchar *path;
 
   key_file = g_key_file_new();
   path = g_build_filename(g_get_home_dir(),
