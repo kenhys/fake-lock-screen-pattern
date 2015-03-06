@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 
 static gboolean
@@ -38,10 +40,40 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
   return TRUE;
 }
 
+static gchar *module = NULL;
+static gchar *background = NULL;
+static gchar *foreground = NULL;
+static gchar *mark = NULL;
+static gboolean verbose = FALSE;
+
+static GOptionEntry option_entries[] = 
+{
+  { "pattern-module",   'p', 0, G_OPTION_ARG_STRING, &module,
+    "Pattern module",  "MODULE" },
+  { "background-color", 'b', 0, G_OPTION_ARG_STRING, &background,
+    "Background color (Color name or #RRGGBB)", "COLOR" },
+  { "foreground-color", 'f', 0, G_OPTION_ARG_STRING, &foreground,
+    "Foreground color (Color name or #RRGGBB)", "COLOR" },
+  { "mark-color",       'm', 0, G_OPTION_ARG_STRING, &mark,
+    "Marked color (Color name or #RRGGBB)", "COLOR" },
+  { "verbose",          'v', 0,   G_OPTION_ARG_NONE, &verbose,
+    "Verbose mode", NULL },
+  { NULL }
+};
+
 int main(int argc, char *argv[])
 {
   GtkWidget *window;
   GtkWidget *drawing;
+  GError *error = NULL;
+  GOptionContext *context;
+
+  context = g_option_context_new("- Demonstrate faked lock screen pattern program");
+  g_option_context_add_main_entries(context, option_entries, "fake-lock-screen-pattern");
+  if (!g_option_context_parse(context, &argc, &argv, &error)) {
+    g_error("Failed to parse options: %s\n", error->message);
+    exit(1);
+  }
 
   gtk_init(&argc, &argv);
 
