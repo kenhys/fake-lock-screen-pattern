@@ -1,9 +1,47 @@
 #include <gtk/gtk.h>
 
+static gboolean
+button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  g_print("%s:%d\n", G_STRFUNC, event->button);
+
+  return TRUE;
+}
+
+static gboolean
+configure_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+  g_print("%s:%d\n", G_STRFUNC, event->button);
+  return FALSE;
+}
+
+static gboolean
+expose_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+  g_print("%s:%d\n", G_STRFUNC, event->button);
+  return FALSE;
+}
+
+static gboolean
+motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
+{
+  gint x, y;
+  GdkModifierType modifier_state;
+
+  gdk_window_get_pointer(event->window, &x, &y, &modifier_state);
+
+  g_print("%s:modifier state: %d x:%d y:%d\n", G_STRFUNC, modifier_state, x, y);
+
+  if (modifier_state & GDK_BUTTON1_MASK)
+    g_print("%s:GDK_BUTTON1_MASK\n", G_STRFUNC);
+
+  return TRUE;
+}
+
 int main(int argc, char *argv[])
 {
   GtkWidget *window;
-
+  GtkWidget *drawing;
 
   gtk_init(&argc, &argv);
 
@@ -12,6 +50,24 @@ int main(int argc, char *argv[])
 
   gtk_window_fullscreen(GTK_WINDOW(window));
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
+
+  drawing = gtk_drawing_area_new();
+  gtk_container_add(GTK_CONTAINER(window), drawing);
+
+  g_signal_connect(drawing, "button-press-event",
+                   G_CALLBACK(button_press_event), NULL);
+  g_signal_connect(drawing, "configure-event",
+                   G_CALLBACK(configure_event), NULL);
+  g_signal_connect(drawing, "expose-event",
+                   G_CALLBACK(expose_event), NULL);
+  g_signal_connect(drawing, "motion-notify-event",
+                   G_CALLBACK(motion_notify_event), NULL);
+
+  gtk_widget_set_events(drawing, gtk_widget_get_events(drawing)
+                        | GDK_LEAVE_NOTIFY_MASK
+                        | GDK_BUTTON_PRESS_MASK
+                        | GDK_POINTER_MOTION_MASK
+                        | GDK_POINTER_MOTION_HINT_MASK);
 
   gtk_widget_show_all(window);
 
