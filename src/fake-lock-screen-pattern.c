@@ -119,6 +119,17 @@ int main(int argc, char *argv[])
 
   drawing = gtk_drawing_area_new();
 
+  scrolled = gtk_scrolled_window_new(NULL, NULL);
+  gtk_widget_show(scrolled);
+
+  textview = gtk_text_view_new();
+  gtk_container_add(GTK_CONTAINER(scrolled), textview);
+  gtk_widget_show(textview);
+
+  vbox = gtk_vbox_new(TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), drawing, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
+
   g_signal_connect(drawing, "button-press-event",
                    G_CALLBACK(button_press_event), NULL);
   g_signal_connect(drawing, "configure-event",
@@ -128,24 +139,13 @@ int main(int argc, char *argv[])
   g_signal_connect(drawing, "motion-notify-event",
                    G_CALLBACK(motion_notify_event), NULL);
 
+  g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
   gtk_widget_set_events(drawing, gtk_widget_get_events(drawing)
                         | GDK_LEAVE_NOTIFY_MASK
                         | GDK_BUTTON_PRESS_MASK
                         | GDK_POINTER_MOTION_MASK
                         | GDK_POINTER_MOTION_HINT_MASK);
-
-  scrolled = gtk_scrolled_window_new(NULL, NULL);
-  gtk_widget_show(scrolled);
-  
-  textview = gtk_text_view_new();
-  gtk_container_add(GTK_CONTAINER(scrolled), textview);
-  gtk_widget_show(textview);
-
-  vbox = gtk_vbox_new(TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), drawing, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
-
-  g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
