@@ -95,6 +95,9 @@ int main(int argc, char *argv[])
 {
   GtkWidget *window;
   GtkWidget *drawing;
+  GtkWidget *vbox;
+  GtkWidget *scrolled;
+  GtkWidget *textview;
   GError *error = NULL;
   GOptionContext *context;
 
@@ -110,11 +113,11 @@ int main(int argc, char *argv[])
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "Fake lock screen pattern");
 
+  gtk_widget_set_size_request(window, 400, 400);
   gtk_window_fullscreen(GTK_WINDOW(window));
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
 
   drawing = gtk_drawing_area_new();
-  gtk_container_add(GTK_CONTAINER(window), drawing);
 
   g_signal_connect(drawing, "button-press-event",
                    G_CALLBACK(button_press_event), NULL);
@@ -131,9 +134,22 @@ int main(int argc, char *argv[])
                         | GDK_POINTER_MOTION_MASK
                         | GDK_POINTER_MOTION_HINT_MASK);
 
-  gtk_widget_show_all(window);
+  scrolled = gtk_scrolled_window_new(NULL, NULL);
+  gtk_widget_show(scrolled);
+  
+  textview = gtk_text_view_new();
+  gtk_container_add(GTK_CONTAINER(scrolled), textview);
+  gtk_widget_show(textview);
+
+  vbox = gtk_vbox_new(TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), drawing, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), scrolled, TRUE, TRUE, 0);
 
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+  gtk_container_add(GTK_CONTAINER(window), vbox);
+
+  gtk_widget_show_all(window);
 
   gtk_main();
   return 0;
