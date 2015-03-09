@@ -70,6 +70,22 @@ void mark_point(gint x, gint y)
   }
 }
 
+gboolean get_mark_point(gint x, gint y, FakeLockPatternPoint *mark)
+{
+  int i;
+
+  for (i = 0; i < 9; i++) {
+    if (points[i].top_left.x <= x &&
+        points[i].top_left.y <= y &&
+        x <= points[i].bottom_right.x &&
+        y <= points[i].bottom_right.y) {
+      *mark = points[i];
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
