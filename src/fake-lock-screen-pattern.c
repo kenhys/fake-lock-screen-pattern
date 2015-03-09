@@ -185,7 +185,7 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
   gboolean in_bounds, marked;
   FakeLockPatternPoint point;
   cairo_t *context;
-  GdkRGBA border_color = { 0.7, 0.7, 0.7 };
+  GdkRGBA border_color = { 0.7, 0.7, 0 };
   GdkRGBA circle_color = { 1.0, 0, 0 };
     
   gdk_window_get_pointer(event->window, &x, &y, &modifier_state);
