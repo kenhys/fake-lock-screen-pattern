@@ -134,6 +134,30 @@ void draw_background_pattern(GdkWindow *window, const GdkRectangle *rectangle,
 
 }
 
+gchar *get_marked_string()
+{
+  gchar *buf;
+  int i, j, max;
+
+  for (i = 0; i < 9; i++) {
+    if (points[i].mark > 0) {
+      if (max < points[i].mark) {
+        max = points[i].mark;
+      }
+    }
+  }
+  buf = g_new0(gchar, max + 2);
+  buf[max+1] = '\0';
+  for (i = 0; i < max + 1; i++) {
+    for (j = 0; j < 9; j++) {
+      if (points[j].mark == i) {
+        buf[i] = points[j].value;
+      }
+    }
+  }
+  g_print("MARK %s\n", buf);
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
@@ -168,6 +192,10 @@ button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
   gchar *msg;
 
   msg = g_strdup_printf("%s: button:%d\n", G_STRFUNC, event->button);
+  insert_textview_log(GTK_WIDGET(data), msg);
+  g_free(msg);
+
+  msg = get_marked_string();
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
 
