@@ -31,7 +31,7 @@ button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 }
 
 static gboolean
-configure_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+configure_event(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
 {
   gchar *msg;
 
@@ -43,7 +43,7 @@ configure_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 static gboolean
-expose_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   gchar *msg;
 
