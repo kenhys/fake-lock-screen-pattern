@@ -405,6 +405,7 @@ int main(int argc, char *argv[])
   gtk_widget_set_size_request(window, 400, 400);
   gtk_window_fullscreen(GTK_WINDOW(window));
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
+  gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
 
   drawing = gtk_drawing_area_new();
 
