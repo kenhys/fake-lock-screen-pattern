@@ -227,6 +227,8 @@ button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
   rectangle.height = option.height;
   draw_background_pattern(widget->window, &rectangle,
                           circle_color, border_color);
+  current_index = -1;
+  init_module(option.width, option.height);
 
   return TRUE;
 }
