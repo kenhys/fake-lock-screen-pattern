@@ -12,13 +12,13 @@ typedef struct {
 } GdkRGBA;
 #endif
 
-typedef struct _FakeLockOption {
+typedef struct _FakeLockScreenPatternOption {
   void *module;
   gint width;
   gint height;
   gchar *real;
   gchar *dummy;
-} FakeLockOption;
+} FakeLockScreenPatternOption;
 
 typedef struct {
   gint mark;

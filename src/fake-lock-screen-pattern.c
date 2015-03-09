@@ -9,7 +9,7 @@ gint input[9] = { '\0' };
 gint current_index = -1;
 FakeLockPatternPoint points[9];
 
-static FakeLockOption option;
+static FakeLockScreenPatternOption option;
 
 void init_module(gint width, gint height)
 {
