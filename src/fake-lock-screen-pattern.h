@@ -14,6 +14,8 @@ typedef struct {
 
 typedef struct _FakeLockOption {
   void *module;
+  gint width;
+  gint height;
   gchar *real;
   gchar *dummy;
 } FakeLockOption;
