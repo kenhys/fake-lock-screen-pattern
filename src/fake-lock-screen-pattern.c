@@ -9,6 +9,8 @@ gint input[9] = { '\0' };
 gint current_index = -1;
 FakeLockPatternPoint points[9];
 
+static FakeLockOption option;
+
 void init_module(gint width, gint height)
 {
   int i, j, index;
@@ -190,6 +192,9 @@ static gboolean
 button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
   gchar *msg;
+  GdkRectangle rectangle;
+  GdkRGBA border_color = { 0.7, 0.7, 0.7 };
+  GdkRGBA circle_color = { 1.0, 1.0, 1.0 };
 
   msg = g_strdup_printf("%s: button:%d\n", G_STRFUNC, event->button);
   insert_textview_log(GTK_WIDGET(data), msg);
@@ -198,6 +203,11 @@ button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
   msg = get_marked_string();
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
+
+  rectangle.width = option.width;
+  rectangle.height = option.height;
+  draw_background_pattern(widget->window, &rectangle,
+                          circle_color, border_color);
 
   return TRUE;
 }
@@ -215,6 +225,9 @@ configure_event(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
           widget->allocation.width,
           widget->allocation.height);
   init_module(widget->allocation.width, widget->allocation.height);
+
+  option.width = widget->allocation.width;
+  option.height = widget->allocation.height;
 
   return TRUE;
 }
@@ -340,8 +353,6 @@ static GOptionEntry option_entries[] =
     "Verbose mode", NULL },
   { NULL }
 };
-
-static FakeLockOption option;
 
 void load_config_file(void)
 {
