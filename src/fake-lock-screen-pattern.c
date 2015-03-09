@@ -35,6 +35,41 @@ void init_module(gint width, gint height)
   }
 }
 
+gboolean in_mark_point(gint x, gint y, gboolean *marked)
+{
+  int i;
+  FakeLockPatternPoint point;
+
+  *marked = FALSE;
+  for (i = 0; i < 9; i++) {
+    point = points[i];
+    if (point.top_left.x <= x &&
+        point.top_left.y <= y &&
+        x <= point.bottom_right.x &&
+        y <= point.bottom_right.y) {
+      *marked = point.marked;
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+void mark_point(gint x, gint y)
+{
+  int i;
+  FakeLockPatternPoint point;
+
+  for (i = 0; i < 9; i++) {
+    point = points[i];
+    if (point.top_left.x <= x &&
+        point.top_left.y <= y &&
+        x <= point.bottom_right.x &&
+        y <= point.bottom_right.y) {
+      points[i].marked = TRUE;
+    }
+  }
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
