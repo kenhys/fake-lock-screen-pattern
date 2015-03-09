@@ -9,6 +9,14 @@ gint input[9] = { '\0' };
 gint current_index = -1;
 FakeLockPatternPoint points[9];
 
+static gchar *module = NULL;
+static gchar *background = NULL;
+static gchar *foreground = NULL;
+static gchar *mark = NULL;
+static gchar *real = NULL;
+static gchar *dummy = NULL;
+static gboolean verbose = FALSE;
+
 static FakeLockScreenPatternOption option;
 
 void init_module(gint width, gint height)
@@ -326,14 +334,6 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 
   return TRUE;
 }
-
-static gchar *module = NULL;
-static gchar *background = NULL;
-static gchar *foreground = NULL;
-static gchar *mark = NULL;
-static gchar *real = NULL;
-static gchar *dummy = NULL;
-static gboolean verbose = FALSE;
 
 static GOptionEntry option_entries[] = 
 {
