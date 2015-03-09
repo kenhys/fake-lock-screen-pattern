@@ -137,12 +137,6 @@ static GOptionEntry option_entries[] =
   { NULL }
 };
 
-typedef struct _FakeLockOption {
-  void *module;
-  gchar *real;
-  gchar *dummy;
-} FakeLockOption;
-
 static FakeLockOption option;
 
 void load_config_file(void)

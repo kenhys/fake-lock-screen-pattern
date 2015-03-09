@@ -12,6 +12,12 @@ typedef struct {
 } GdkRGBA;
 #endif
 
+typedef struct _FakeLockOption {
+  void *module;
+  gchar *real;
+  gchar *dummy;
+} FakeLockOption;
+
 void flsp_draw_circle(cairo_t *context,
                       gint x, gint y, gint radius,
                       GdkRGBA circle, GdkRGBA border);
