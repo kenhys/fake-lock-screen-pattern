@@ -6,7 +6,7 @@
 
 gint fake[10] = { '1', '2', '5', '4', '7', '8', '9', '6', '3', '\0' };
 gint input[9] = { '\0' };
-gint current_index = 0;
+gint current_index = -1;
 FakeLockPatternPoint points[9];
 
 void init_module(gint width, gint height)
