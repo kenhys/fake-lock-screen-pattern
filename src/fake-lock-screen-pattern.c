@@ -99,6 +99,41 @@ gboolean get_mark_point_by_index(gint index, FakeLockPatternPoint *point)
   return FALSE;
 }
 
+void draw_background_pattern(GdkWindow *window, const GdkRectangle *rectangle,
+                             const GdkRGBA fill_color, const GdkRGBA border_color)
+{
+  cairo_t *context;
+  int i, j, x, y, distance, radius;
+
+  context = gdk_cairo_create(window);
+  gdk_cairo_rectangle(context, rectangle);
+
+  cairo_set_source_rgb(context, 0, 0, 0);
+  cairo_fill(context);
+
+  gdk_cairo_rectangle(context, rectangle);
+
+  cairo_set_source_rgb(context, 0, 0, 0);
+  cairo_fill(context);
+
+  distance = rectangle->height / 4;
+  x = rectangle->width / 2 - distance;
+  y = rectangle->height / 4;
+  radius = 10;
+
+  for (j = 0; j < 3; j++) {
+    x = rectangle->width / 2 - distance;
+    for (i = 0; i < 3; i++) {
+      flsp_draw_circle(context, x, y, radius, fill_color, border_color);
+      x += distance;
+    }
+    y += distance;
+  }
+
+  cairo_destroy(context);
+
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
@@ -169,34 +204,8 @@ expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
 
-  context = gdk_cairo_create(widget->window);
-
-  cairo_set_source_rgb(context, 0, 0, 0);
-  gdk_cairo_rectangle(context, &event->area);
-  cairo_fill(context);
-
-  context = gdk_cairo_create(widget->window);
-
-  gdk_cairo_rectangle(context, &event->area);
-
-  cairo_set_source_rgb(context, 0, 0, 0);
-  cairo_fill(context);
-
-  distance = event->area.height / 4;
-  x = event->area.width / 2 - distance;
-  y = event->area.height / 4;
-  radius = 10;
-
-  for (j = 0; j < 3; j++) {
-    x = event->area.width / 2 - distance;
-    for (i = 0; i < 3; i++) {
-      flsp_draw_circle(context, x, y, radius, circle_color, border_color);
-      x += distance;
-    }
-    y += distance;
-  }
-
-  cairo_destroy(context);
+  draw_background_pattern(widget->window, &event->area,
+                          circle_color, border_color);
 
   return TRUE;
 }
