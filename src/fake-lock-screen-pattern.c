@@ -184,6 +184,11 @@ insert_textview_log(GtkWidget *view, gchar *message)
 }
 
 
+static gboolean
+key_press_event(GtkWidget *widget, GdkEventKey  *event, gpointer   user_data)
+{
+  return TRUE;
+}
 
 static gboolean
 button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
@@ -419,6 +424,8 @@ int main(int argc, char *argv[])
                    G_CALLBACK(button_press_event), textview);
   g_signal_connect(drawing, "button-release-event",
                    G_CALLBACK(button_release_event), textview);
+  g_signal_connect(drawing, "key-press-event",
+                   G_CALLBACK(key_press_event), textview);
   g_signal_connect(drawing, "configure-event",
                    G_CALLBACK(configure_event), textview);
   g_signal_connect(drawing, "expose-event",
@@ -430,6 +437,7 @@ int main(int argc, char *argv[])
 
   gtk_widget_set_events(drawing, gtk_widget_get_events(drawing)
                         | GDK_LEAVE_NOTIFY_MASK
+                        | GDK_KEY_PRESS_MASK
                         | GDK_BUTTON_PRESS_MASK
                         | GDK_BUTTON_RELEASE_MASK
                         | GDK_POINTER_MOTION_MASK
