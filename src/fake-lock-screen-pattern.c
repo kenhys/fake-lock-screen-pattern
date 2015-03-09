@@ -185,6 +185,7 @@ insert_textview_log(GtkWidget *view, gchar *message)
 static gboolean
 key_press_event(GtkWidget *widget, GdkEventKey  *event, gpointer   user_data)
 {
+  g_print("%s\n", G_STRFUNC);
   return TRUE;
 }
 
