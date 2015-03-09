@@ -12,4 +12,8 @@ typedef struct {
 } GdkRGBA;
 #endif
 
+void flsp_draw_circle(cairo_t *context,
+                      gint x, gint y, gint radius,
+                      GdkRGBA circle, GdkRGBA border);
+
 #endif
