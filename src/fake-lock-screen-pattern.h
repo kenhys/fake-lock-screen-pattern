@@ -19,7 +19,7 @@ typedef struct _FakeLockOption {
 } FakeLockOption;
 
 typedef struct {
-  gboolean marked;
+  gint mark;
   gint value;
   GdkPoint top_left;
   GdkPoint bottom_right;
