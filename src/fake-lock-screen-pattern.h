@@ -16,4 +16,7 @@ void flsp_draw_circle(cairo_t *context,
                       gint x, gint y, gint radius,
                       GdkRGBA circle, GdkRGBA border);
 
+gboolean is_marked(gint x, gint y,
+                   gint *marked, void *user_data);
+
 #endif
