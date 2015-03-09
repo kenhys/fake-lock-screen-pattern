@@ -6,6 +6,7 @@
 
 gint fake[10] = { '1', '2', '5', '4', '7', '8', '9', '6', '3', '\0' };
 gint input[9] = { '\0' };
+gint current_index = 0;
 FakeLockPatternPoint points[9];
 
 void init_module(gint width, gint height)
@@ -23,7 +24,7 @@ void init_module(gint width, gint height)
     x = width / 2 - distance;
     for (i = 0; i < 3; i++) {
       index = j * 3 + i;
-      points[index].marked = FALSE;
+      points[index].mark = -1;
       points[index].value = patterns[index];
       points[index].top_left.x = x - radius;
       points[index].top_left.y = y - radius;
@@ -35,26 +36,26 @@ void init_module(gint width, gint height)
   }
 }
 
-gboolean in_mark_point(gint x, gint y, gboolean *marked)
+gboolean in_mark_point(gint x, gint y, gint *mark)
 {
   int i;
   FakeLockPatternPoint point;
 
-  *marked = FALSE;
+  *mark = -1;
   for (i = 0; i < 9; i++) {
     point = points[i];
     if (point.top_left.x <= x &&
         point.top_left.y <= y &&
         x <= point.bottom_right.x &&
         y <= point.bottom_right.y) {
-      *marked = point.marked;
+      *mark = point.mark;
       return TRUE;
     }
   }
   return FALSE;
 }
 
-void mark_point(gint x, gint y)
+void mark_point(gint x, gint y, gint mark)
 {
   int i;
   FakeLockPatternPoint point;
@@ -65,7 +66,7 @@ void mark_point(gint x, gint y)
         point.top_left.y <= y &&
         x <= point.bottom_right.x &&
         y <= point.bottom_right.y) {
-      points[i].marked = TRUE;
+      points[i].mark = mark;
     }
   }
 }
@@ -179,10 +180,10 @@ expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 static gboolean
 motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 {
-  gint x, y, distance;
+  gint x, y, distance, mark;
   GdkModifierType modifier_state;
   gchar *msg;
-  gboolean in_bounds, marked;
+  gboolean in_bounds;
   FakeLockPatternPoint point;
   cairo_t *context;
   GdkRGBA border_color = { 0.7, 0.7, 0 };
@@ -199,15 +200,15 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 #endif
 
   if (modifier_state & GDK_BUTTON1_MASK) {
-    in_bounds = in_mark_point(x, y, &marked);
-    if (in_bounds && !marked) {
+    in_bounds = in_mark_point(x, y, &mark);
+    if (in_bounds && mark < 0) {
       g_print("%s: MARK GDK_BUTTON1_MASK\n", G_STRFUNC);
       msg = g_strdup_printf("%s:MARK GDK_BUTTON1_MASK %d x:%d y:%d\n",
                             G_STRFUNC, modifier_state, x, y);
       insert_textview_log(GTK_WIDGET(data), msg);
       g_free(msg);
 
-      mark_point(x, y);
+      mark_point(x, y, ++current_index);
       get_mark_point(x, y, &point);
       context = gdk_cairo_create(widget->window);
       distance = point.bottom_right.x - point.top_left.x;
