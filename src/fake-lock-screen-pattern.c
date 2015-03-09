@@ -4,6 +4,37 @@
 
 #include "fake-lock-screen-pattern.h"
 
+gint fake[10] = { '1', '2', '5', '4', '7', '8', '9', '6', '3', '\0' };
+gint input[9] = { '\0' };
+FakeLockPatternPoint points[9];
+
+void init_module(gint width, gint height)
+{
+  int i, j, index;
+  int x, y, distance, radius;
+  gint patterns[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+  distance = height / 4;
+  x = width / 2 - distance;
+  y = height / 4;
+  radius = 10;
+
+  for (j = 0; j < 3; j++) {
+    x = width / 2 - distance;
+    for (i = 0; i < 3; i++) {
+      x += distance;
+      index = j * 3 + i;
+      points[index].marked = FALSE;
+      points[index].value = patterns[index];
+      points[index].top_left.x = x - radius;
+      points[index].top_left.y = y - radius;
+      points[index].bottom_right.x = x + radius;
+      points[index].bottom_right.y = y + radius;
+    }
+    y += distance;
+  }
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
@@ -41,7 +72,12 @@ configure_event(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
 
-  return FALSE;
+  g_print("width: %d height: %d\n",
+          widget->allocation.width,
+          widget->allocation.height);
+  init_module(widget->allocation.width, widget->allocation.height);
+
+  return TRUE;
 }
 
 static gboolean
