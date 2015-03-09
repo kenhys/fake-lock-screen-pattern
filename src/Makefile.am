@@ -1,5 +1,7 @@
 bin_PROGRAMS = fake-lock-screen-pattern
 
+fake_lock_screen_pattern_SOURCES = fake-lock-screen-pattern.c flsputils.c
+
 AM_CFLAGS =		\
 	$(GLIB_CFLAGS)	\
 	$(GTK_CFLAGS)
