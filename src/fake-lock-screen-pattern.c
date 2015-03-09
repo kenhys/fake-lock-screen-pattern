@@ -211,6 +211,11 @@ button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
 
   msg = get_marked_string();
   insert_textview_log(GTK_WIDGET(data), msg);
+
+  g_print("mark:%s dummy:%s", msg, dummy);
+  if (g_strcmp0(msg, dummy) == 0) {
+    gtk_main_quit();
+  }
   g_free(msg);
 
   rectangle.width = option.width;
