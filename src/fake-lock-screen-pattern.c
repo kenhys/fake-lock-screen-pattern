@@ -179,20 +179,46 @@ expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 static gboolean
 motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 {
-  gint x, y;
+  gint x, y, distance;
   GdkModifierType modifier_state;
   gchar *msg;
-
+  gboolean in_bounds, marked;
+  FakeLockPatternPoint point;
+  cairo_t *context;
+  GdkRGBA border_color = { 0.7, 0.7, 0.7 };
+  GdkRGBA circle_color = { 1.0, 0, 0 };
+    
   gdk_window_get_pointer(event->window, &x, &y, &modifier_state);
 
+#if 0
   msg = g_strdup_printf("%s:modifier state: %d x:%d y:%d\n",
                         G_STRFUNC, modifier_state, x, y);
   
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
+#endif
 
-  if (modifier_state & GDK_BUTTON1_MASK)
-    g_print("%s:GDK_BUTTON1_MASK\n", G_STRFUNC);
+  if (modifier_state & GDK_BUTTON1_MASK) {
+    in_bounds = in_mark_point(x, y, &marked);
+    if (in_bounds && !marked) {
+      g_print("%s: MARK GDK_BUTTON1_MASK\n", G_STRFUNC);
+      msg = g_strdup_printf("%s:MARK GDK_BUTTON1_MASK %d x:%d y:%d\n",
+                            G_STRFUNC, modifier_state, x, y);
+      insert_textview_log(GTK_WIDGET(data), msg);
+      g_free(msg);
+
+      mark_point(x, y);
+      get_mark_point(x, y, &point);
+      context = gdk_cairo_create(widget->window);
+      distance = point.bottom_right.x - point.top_left.x;
+      flsp_draw_circle(context,
+                       point.top_left.x + distance / 2,
+                       point.top_left.y + distance / 2,
+                       distance / 2,
+                       circle_color, border_color);
+      cairo_destroy(context);
+    }
+  }
 
   return TRUE;
 }
