@@ -415,8 +415,10 @@ int main(int argc, char *argv[])
 
   paned = gtk_vpaned_new();
   gtk_paned_pack1(GTK_PANED(paned), drawing, TRUE, FALSE);
-  gtk_paned_pack2(GTK_PANED(paned), scrolled, FALSE, FALSE);
-  gtk_widget_set_size_request(scrolled, -1, 200);
+  if (debug) {
+    gtk_paned_pack2(GTK_PANED(paned), scrolled, FALSE, FALSE);
+    gtk_widget_set_size_request(scrolled, -1, 200);
+  }
 
   g_signal_connect(drawing, "button-press-event",
                    G_CALLBACK(button_press_event), textview);
