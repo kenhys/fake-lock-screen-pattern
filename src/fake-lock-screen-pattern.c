@@ -22,7 +22,6 @@ void init_module(gint width, gint height)
   for (j = 0; j < 3; j++) {
     x = width / 2 - distance;
     for (i = 0; i < 3; i++) {
-      x += distance;
       index = j * 3 + i;
       points[index].marked = FALSE;
       points[index].value = patterns[index];
@@ -30,6 +29,7 @@ void init_module(gint width, gint height)
       points[index].top_left.y = y - radius;
       points[index].bottom_right.x = x + radius;
       points[index].bottom_right.y = y + radius;
+      x += distance;
     }
     y += distance;
   }
