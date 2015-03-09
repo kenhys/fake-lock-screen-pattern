@@ -25,6 +25,12 @@ typedef struct {
   GdkPoint bottom_right;
 } FakeLockPatternPoint;
 
+typedef enum {
+  FLSP_ONE_STROKE,
+  FLSP_ON_BOARD,
+  FLSP_N_PATTERN,
+} FakeLockScreenPattern;
+
 void flsp_draw_circle(cairo_t *context,
                       gint x, gint y, gint radius,
                       GdkRGBA circle, GdkRGBA border);
