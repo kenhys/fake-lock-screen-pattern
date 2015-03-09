@@ -195,8 +195,8 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
   gint x, y, distance, mark;
   GdkModifierType modifier_state;
   gchar *msg;
-  gboolean in_bounds;
-  FakeLockPatternPoint point;
+  gboolean in_bounds, succeeded;
+  FakeLockPatternPoint point, prev_point;
   cairo_t *context;
   GdkRGBA border_color = { 0.7, 0.7, 0 };
   GdkRGBA circle_color = { 1.0, 0, 0 };
@@ -229,6 +229,22 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
                        point.top_left.y + distance / 2,
                        distance / 2,
                        circle_color, border_color);
+      if (current_index > 0) {
+        g_print("%s: GET PREV GDK_BUTTON1_MASK\n", G_STRFUNC);
+        succeeded = get_mark_point_by_index(current_index - 1, &prev_point);
+        if (succeeded) {
+          g_print("%s: LINE GDK_BUTTON1_MASK\n", G_STRFUNC);
+          cairo_move_to(context,
+                        prev_point.top_left.x + distance / 2,
+                        prev_point.top_left.y + distance / 2);
+          cairo_set_line_width(context, 20);
+          cairo_set_source_rgb(context, circle_color.red, circle_color.green, circle_color.blue);
+          cairo_line_to(context,
+                        point.top_left.x + distance / 2,
+                        point.top_left.y + distance / 2);
+          cairo_stroke(context);
+        }
+      }
       cairo_destroy(context);
     }
   }
