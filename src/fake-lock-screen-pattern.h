@@ -18,6 +18,13 @@ typedef struct _FakeLockOption {
   gchar *dummy;
 } FakeLockOption;
 
+typedef struct {
+  gboolean marked;
+  gint value;
+  GdkPoint top_left;
+  GdkPoint bottom_right;
+} FakeLockPatternPoint;
+
 void flsp_draw_circle(cairo_t *context,
                       gint x, gint y, gint radius,
                       GdkRGBA circle, GdkRGBA border);
