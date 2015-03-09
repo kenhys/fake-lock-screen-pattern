@@ -87,6 +87,18 @@ gboolean get_mark_point(gint x, gint y, FakeLockPatternPoint *mark)
   return FALSE;
 }
 
+gboolean get_mark_point_by_index(gint index, FakeLockPatternPoint *point)
+{
+  int i;
+  for (i = 0; i < 9; i++) {
+    if (points[i].mark == index) {
+      *point = points[i];
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
