@@ -4,17 +4,15 @@
 
 #include "fake-lock-screen-pattern.h"
 
-gint fake[10] = { '1', '2', '5', '4', '7', '8', '9', '6', '3', '\0' };
 gint input[9] = { '\0' };
 gint current_index = -1;
 FakeLockPatternPoint points[9];
 
 static gchar *module = NULL;
 static gchar *background = NULL;
-static gchar *foreground = NULL;
-static gchar *mark = NULL;
+static gchar *fake = NULL;
 static gchar *real = NULL;
-static gchar *dummy = NULL;
+static gboolean debug = FALSE;
 static gboolean verbose = FALSE;
 
 static FakeLockScreenPatternOption option;
@@ -217,8 +215,8 @@ button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer data)
   msg = get_marked_string();
   insert_textview_log(GTK_WIDGET(data), msg);
 
-  g_print("mark:%s dummy:%s", msg, dummy);
-  if (g_strcmp0(msg, dummy) == 0) {
+  g_print("mark:%s dummy:%s", msg, fake);
+  if (g_strcmp0(msg, fake) == 0) {
     gtk_main_quit();
   }
   g_free(msg);
@@ -350,19 +348,17 @@ motion_notify_event(GtkWidget *widget, GdkEventMotion *event, gpointer data)
 
 static GOptionEntry option_entries[] = 
 {
-  { "pattern-module",   'p', 0, G_OPTION_ARG_STRING, &module,
-    "Pattern module",  "MODULE" },
+  { "pattern-module",   'm', 0, G_OPTION_ARG_STRING, &module,
+    "Pattern module",   "MODULE" },
   { "real-password",    'r', 0, G_OPTION_ARG_STRING, &real,
-    "Real password",   "PASSWORD" },
-  { "dummy-password",   'd', 0, G_OPTION_ARG_STRING, &dummy,
-    "Dummy password",  "PASSWORD" },
+    "Real password",    "PASSWORD" },
+  { "fake-password",    'f', 0, G_OPTION_ARG_STRING, &fake,
+    "Fake password",    "PASSWORD" },
   { "background-color", 'b', 0, G_OPTION_ARG_STRING, &background,
     "Background color (Color name or #RRGGBB)", "COLOR" },
-  { "foreground-color", 'f', 0, G_OPTION_ARG_STRING, &foreground,
-    "Foreground color (Color name or #RRGGBB)", "COLOR" },
-  { "mark-color",       'm', 0, G_OPTION_ARG_STRING, &mark,
-    "Marked color (Color name or #RRGGBB)", "COLOR" },
-  { "verbose",          'v', 0,   G_OPTION_ARG_NONE, &verbose,
+  { "debug",            'd', 0, G_OPTION_ARG_NONE, &debug,
+    "Debug mode", "" },
+  { "verbose",          'v', 0, G_OPTION_ARG_NONE, &verbose,
     "Verbose mode", NULL },
   { NULL }
 };
