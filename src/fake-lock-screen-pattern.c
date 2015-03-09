@@ -424,7 +424,7 @@ int main(int argc, char *argv[])
                    G_CALLBACK(button_press_event), textview);
   g_signal_connect(drawing, "button-release-event",
                    G_CALLBACK(button_release_event), textview);
-  g_signal_connect(drawing, "key-press-event",
+  g_signal_connect(window, "key-press-event",
                    G_CALLBACK(key_press_event), textview);
   g_signal_connect(drawing, "configure-event",
                    G_CALLBACK(configure_event), textview);
