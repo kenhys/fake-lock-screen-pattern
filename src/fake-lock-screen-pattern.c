@@ -45,13 +45,22 @@ configure_event(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
 static gboolean
 expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
+  cairo_t *context;
   gchar *msg;
 
   msg = g_strdup_printf("%s:\n", G_STRFUNC);
   insert_textview_log(GTK_WIDGET(data), msg);
   g_free(msg);
 
-  return FALSE;
+  context = gdk_cairo_create(widget->window);
+
+  cairo_set_source_rgb(context, 0, 0, 0);
+  gdk_cairo_rectangle(context, &event->area);
+  cairo_fill(context);
+
+  cairo_destroy(context);
+
+  return TRUE;
 }
 
 static gboolean
