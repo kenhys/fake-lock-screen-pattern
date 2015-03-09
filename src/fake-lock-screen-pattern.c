@@ -166,6 +166,7 @@ gchar *get_marked_string()
     }
   }
   g_print("MARK %s\n", buf);
+  return buf;
 }
 
 static void
