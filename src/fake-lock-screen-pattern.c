@@ -2,6 +2,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#include "fake-lock-screen-pattern.h"
+
 static void
 insert_textview_log(GtkWidget *view, gchar *message)
 {
@@ -47,6 +49,9 @@ expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   cairo_t *context;
   gchar *msg;
+  gint i, j, x, y, distance, radius;
+  GdkRGBA border_color = { 0.7, 0.7, 0.7 };
+  GdkRGBA circle_color = { 1.0, 1.0, 1.0 };
 
   msg = g_strdup_printf("%s:\n", G_STRFUNC);
   insert_textview_log(GTK_WIDGET(data), msg);
@@ -57,6 +62,27 @@ expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_set_source_rgb(context, 0, 0, 0);
   gdk_cairo_rectangle(context, &event->area);
   cairo_fill(context);
+
+  context = gdk_cairo_create(widget->window);
+
+  gdk_cairo_rectangle(context, &event->area);
+
+  cairo_set_source_rgb(context, 0, 0, 0);
+  cairo_fill(context);
+
+  distance = event->area.height / 4;
+  x = event->area.width / 2 - distance;
+  y = event->area.height / 4;
+  radius = 10;
+
+  for (j = 0; j < 3; j++) {
+    x = event->area.width / 2 - distance;
+    for (i = 0; i < 3; i++) {
+      flsp_draw_circle(context, x, y, radius, circle_color, border_color);
+      x += distance;
+    }
+    y += distance;
+  }
 
   cairo_destroy(context);
 
